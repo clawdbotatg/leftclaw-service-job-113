@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Address, EtherInput } from "@scaffold-ui/components";
 import type { NextPage } from "next";
@@ -125,6 +125,15 @@ const SwapPanel = ({ connectedAddress }: { connectedAddress: string }) => {
   const [buyEth, setBuyEth] = useState("");
   const [sellAmount, setSellAmount] = useState("");
 
+  const triggerMobileDeepLink = useCallback(() => {
+    if (typeof window === "undefined") return;
+    if (!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) return;
+    if (window.ethereum) return; // already in an in-app browser
+    setTimeout(() => {
+      window.location.href = "metamask://";
+    }, 2000);
+  }, []);
+
   const [approvalSubmitting, setApprovalSubmitting] = useState(false);
   const [approvalCooldown, setApprovalCooldown] = useState(false);
 
@@ -160,11 +169,13 @@ const SwapPanel = ({ connectedAddress }: { connectedAddress: string }) => {
     try {
       const value = parseEther(buyEth);
       const deadline = BigInt(Math.floor(Date.now() / 1000) + 1200);
-      await writeRouter({
+      const writePromise = writeRouter({
         functionName: "swapExactETHForTokensSupportingFeeOnTransferTokens",
         args: [0n, [WETH_ADDRESS, YEET_ADDRESS], connectedAddress as `0x${string}`, deadline],
         value,
       });
+      triggerMobileDeepLink();
+      await writePromise;
       notification.success("CRUSH BUY confirmed");
       setBuyEth("");
     } catch (e: any) {
@@ -205,10 +216,12 @@ const SwapPanel = ({ connectedAddress }: { connectedAddress: string }) => {
     }
     try {
       const deadline = BigInt(Math.floor(Date.now() / 1000) + 1200);
-      await writeRouter({
+      const writePromise = writeRouter({
         functionName: "swapExactTokensForETHSupportingFeeOnTransferTokens",
         args: [sellAmountWei, 0n, [YEET_ADDRESS, WETH_ADDRESS], connectedAddress as `0x${string}`, deadline],
       });
+      triggerMobileDeepLink();
+      await writePromise;
       notification.success("FLATTEN SELL confirmed");
       setSellAmount("");
     } catch (e: any) {
