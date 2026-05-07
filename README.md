@@ -1,5 +1,7 @@
 # YEET Token
 
+**Live URL:** https://bafybeiaeo7jjpmxe5ajzq4mmezd3kkrzquymkengifqvhfymdbzoyvkm5m.ipfs.community.bgipfs.com/
+
 **SUNDAY SUNDAY SUNDAY** — A monster-truck-themed tax token dApp on Base.
 
 ## Overview

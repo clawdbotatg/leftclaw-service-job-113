@@ -1,5 +1,9 @@
 {
-  name: 'YEET Token',
-  description: 'YEET Token — 1% tax on every buy & sell.',
-  iconPath: 'logo.svg'
+  "name": "YEET Token",
+  "short_name": "YEET",
+  "description": "YEET Token — 1% tax on every buy & sell.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#e85d04"
 }
