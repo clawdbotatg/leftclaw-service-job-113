@@ -34,12 +34,9 @@ contract DeployYeetToken is ScaffoldETHDeploy {
     address constant CLIENT = 0x34aA3F359A9D614239015126635CE7732c18fDF3;
 
     function run() external ScaffoldEthDeployerRunner {
-        uint256 ethAmount = address(this).balance;
-        // When run via forge script with --value, the script contract receives the ETH.
-        // Fall back to msg.value semantics if that's how it's invoked.
-        if (ethAmount == 0) {
-            ethAmount = msg.value;
-        }
+        // Seed the pool with 0.002 ETH worth of initial liquidity (~$4 at current prices).
+        // Taken from the deployer's on-chain balance during broadcast.
+        uint256 ethAmount = 0.002 ether;
 
         // 1. Deploy YeetToken (deployer holds 1,000,000 YEET).
         YeetToken yeet = new YeetToken(deployer);
